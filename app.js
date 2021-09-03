@@ -1,9 +1,14 @@
 const path = require('path')
 const http = require('http')
+const expressHbs = require('express-handlebars')
 
 const express = require('express')
 
 const app = express();
+
+app.engine('handlebars', expressHbs)
+app.set('view engine', 'hbs')
+app.set('views', 'views')
 
 const adminRoutes = require('./routes/admin')
 const dsheetRoutes = require('./routes/mydsheet')
@@ -21,8 +26,8 @@ app.use('/admin', adminRoutes)
 app.use(dsheetRoutes)
 
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-})
+    res.status(404).render('404', { pageTitle: 'Page Not Found' });
+  });
 
 
 const server = http.createServer(app);
